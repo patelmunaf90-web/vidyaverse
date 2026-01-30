@@ -1,0 +1,59 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    match /students/{studentId} {
+      allow read, write: if isSignedIn();
+      // TODO: Add role-based access control (e.g., only admins can delete)
+    }
+
+    match /teachers/{teacherId} {
+      allow read, write: if isSignedIn();
+      // TODO: Add role-based access control
+    }
+
+    match /classes/{classId} {
+      allow read, write: if isSignedIn();
+      // TODO: Add role-based access control
+    }
+    
+    match /school_profile/{profileId} {
+      allow read: if true;
+      allow write: if isSignedIn();
+      // TODO: Add role-based access control (only admins should write)
+    }
+
+    match /attendance/{attendanceId} {
+        allow read, write: if isSignedIn();
+        // TODO: Add role-based access control (teachers can only write for their class)
+    }
+
+    match /teacher_attendance/{teacherAttendanceId} {
+        allow read, write: if isSignedIn();
+        // TODO: Add role-based access control (only admins can write)
+    }
+
+    match /expenses/{expenseId} {
+      allow read, write: if isSignedIn();
+      // TODO: Add role-based access control (only admins/accountants can write)
+    }
+
+    match /dead_stock/{deadStockId} {
+      allow read, write: if isSignedIn();
+      // TODO: Add role-based access control
+    }
+
+    match /fee_payments/{paymentId} {
+      allow get, list: if isSignedIn();
+      allow create, update, delete: if isSignedIn();
+    }
+  }
+}

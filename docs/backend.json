@@ -1,0 +1,229 @@
+{
+  "entities": {
+    "Student": {
+      "title": "Student",
+      "type": "object",
+      "description": "Represents the profile information for a student.",
+      "properties": {
+        "id": { "type": "string" },
+        "grNo": { "type": "string" },
+        "name": { "type": "string" },
+        "fatherName": { "type": "string" },
+        "motherName": { "type": "string" },
+        "dob": { "type": "string" },
+        "gender": { "type": "string", "enum": ["Male", "Female", "Other"] },
+        "address": { "type": "string" },
+        "class": { "type": "string" },
+        "section": { "type": "string" },
+        "rollNo": { "type": "string" },
+        "mobile": { "type": "string" },
+        "aadhaar": { "type": "string" },
+        "photoUrl": { "type": "string" },
+        "status": { "type": "string", "enum": ["Active", "LC Issued"] },
+        "feesPaid": { "type": "number" },
+        "totalFees": { "type": "number" },
+        "caste": { "type": "string" },
+        "lastSchool": { "type": "string" },
+        "lastSchoolYear": { "type": "string" },
+        "lastSchoolPercentage": { "type": "string" }
+      },
+      "required": [
+        "id", "grNo", "name", "fatherName", "motherName", "dob", "gender", "address",
+        "class", "section", "mobile", "photoUrl",
+        "status", "feesPaid", "totalFees"
+      ]
+    },
+    "Teacher": {
+      "title": "Teacher",
+      "type": "object",
+      "description": "Represents the profile information for a teacher.",
+      "properties": {
+        "id": { "type": "string" },
+        "name": { "type": "string" },
+        "subject": { "type": "string" },
+        "mobile": { "type": "string" },
+        "email": { "type": "string", "format": "email" },
+        "photoUrl": { "type": "string" },
+        "status": { "type": "string", "enum": ["Active", "Inactive"] }
+      },
+      "required": ["id", "name", "subject", "mobile", "email", "photoUrl", "status"]
+    },
+    "SchoolClass": {
+      "title": "SchoolClass",
+      "type": "object",
+      "description": "Represents a school class with its sections.",
+      "properties": {
+        "id": { "type": "string" },
+        "name": { "type": "string" },
+        "sections": {
+          "type": "array",
+          "items": { "type": "string" }
+        }
+      },
+      "required": ["id", "name", "sections"]
+    },
+    "SchoolProfile": {
+        "title": "SchoolProfile",
+        "type": "object",
+        "description": "Represents the school's profile information.",
+        "properties": {
+            "name": { "type": "string" },
+            "affiliationNo": { "type": "string" },
+            "schoolCode": { "type": "string" },
+            "udiseCode": { "type": "string" },
+            "address": { "type": "string" },
+            "logoUrl": { "type": "string" },
+            "principalName": { "type": "string" },
+            "academicYear": { "type": "string" }
+        },
+        "required": ["name", "affiliationNo", "schoolCode", "udiseCode", "address", "principalName", "academicYear"]
+    },
+    "Attendance": {
+      "title": "Attendance",
+      "type": "object",
+      "description": "Represents an attendance record.",
+      "properties": {
+        "id": { "type": "string" },
+        "date": { "type": "string", "format": "date" },
+        "studentId": { "type": "string" },
+        "status": { "type": "string", "enum": ["present", "absent"] },
+        "class": { "type": "string" }
+      },
+      "required": ["id", "date", "studentId", "status", "class"]
+    },
+    "TeacherAttendance": {
+        "title": "TeacherAttendance",
+        "type": "object",
+        "description": "Represents a teacher attendance record.",
+        "properties": {
+            "id": { "type": "string" },
+            "date": { "type": "string", "format": "date" },
+            "teacherId": { "type": "string" },
+            "status": { "type": "string", "enum": ["present", "absent"] }
+        },
+        "required": ["id", "date", "teacherId", "status"]
+    },
+    "Expense": {
+      "title": "Expense",
+      "type": "object",
+      "description": "Represents a school expense record.",
+      "properties": {
+        "id": { "type": "string" },
+        "date": { "type": "string", "format": "date" },
+        "category": { "type": "string" },
+        "description": { "type": "string" },
+        "amount": { "type": "number" }
+      },
+      "required": ["id", "date", "category", "description", "amount"]
+    },
+    "DeadStock": {
+      "title": "DeadStock",
+      "type": "object",
+      "description": "Represents a dead stock item.",
+      "properties": {
+        "id": { "type": "string" },
+        "itemName": { "type": "string" },
+        "quantity": { "type": "number" },
+        "purchaseDate": { "type": "string", "format": "date" },
+        "description": { "type": "string" },
+        "price": { "type": "number" },
+        "status": { "type": "string", "enum": ["In Stock", "Disposed", "Sold", "Written Off"] }
+      },
+      "required": ["id", "itemName", "quantity", "purchaseDate", "status"]
+    },
+    "FeePayment": {
+      "title": "FeePayment",
+      "type": "object",
+      "description": "Represents a single fee payment transaction.",
+      "properties": {
+        "id": { "type": "string" },
+        "studentId": { "type": "string" },
+        "amount": { "type": "number" },
+        "date": { "type": "string", "format": "date" },
+        "receiptNo": { "type": "string" }
+      },
+      "required": ["id", "studentId", "amount", "date", "receiptNo"]
+    }
+  },
+  "auth": {
+    "providers": [
+      "password"
+    ]
+  },
+  "firestore": {
+    "structure": [
+      {
+        "path": "/students/{studentId}",
+        "definition": {
+          "entityName": "Student",
+          "schema": { "$ref": "#/backend/entities/Student" },
+          "description": "Stores individual student data."
+        }
+      },
+      {
+        "path": "/teachers/{teacherId}",
+        "definition": {
+          "entityName": "Teacher",
+          "schema": { "$ref": "#/backend/entities/Teacher" },
+          "description": "Stores individual teacher data."
+        }
+      },
+      {
+        "path": "/classes/{classId}",
+        "definition": {
+          "entityName": "SchoolClass",
+          "schema": { "$ref": "#/backend/entities/SchoolClass" },
+          "description": "Stores school class structures."
+        }
+      },
+      {
+        "path": "/school_profile/{profileId}",
+        "definition": {
+          "entityName": "SchoolProfile",
+          "schema": { "$ref": "#/backend/entities/SchoolProfile" },
+          "description": "Stores the main school profile information."
+        }
+      },
+      {
+        "path": "/attendance/{attendanceId}",
+        "definition": {
+            "entityName": "Attendance",
+            "schema": { "$ref": "#/backend/entities/Attendance" },
+            "description": "Stores daily student attendance records."
+        }
+      },
+      {
+        "path": "/teacher_attendance/{teacherAttendanceId}",
+        "definition": {
+            "entityName": "TeacherAttendance",
+            "schema": { "$ref": "#/backend/entities/TeacherAttendance" },
+            "description": "Stores daily teacher attendance records."
+        }
+      },
+      {
+        "path": "/expenses/{expenseId}",
+        "definition": {
+          "entityName": "Expense",
+          "schema": { "$ref": "#/backend/entities/Expense" },
+          "description": "Stores school expense records."
+        }
+      },
+      {
+        "path": "/dead_stock/{deadStockId}",
+        "definition": {
+          "entityName": "DeadStock",
+          "schema": { "$ref": "#/backend/entities/DeadStock" },
+          "description": "Stores dead stock inventory."
+        }
+      },
+      {
+        "path": "/fee_payments/{paymentId}",
+        "definition": {
+          "entityName": "FeePayment",
+          "schema": { "$ref": "#/backend/entities/FeePayment" },
+          "description": "Stores individual fee payment records."
+        }
+      }
+    ]
+  }
+}
